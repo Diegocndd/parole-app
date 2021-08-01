@@ -8,6 +8,7 @@ import Vocabulary from './src/screens/Vocabulary';
 
 import {Provider} from 'react-redux';
 import {Store} from './src/store';
+import './ReactotronConfig';
 
 const Stack = createStackNavigator();
 
