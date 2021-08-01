@@ -1,18 +1,23 @@
 import React from 'react';
-import {Text, View, TextInput, ScrollView} from 'react-native';
-import {useSelector} from 'react-redux';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {
+  Text,
+  View,
+  TextInput,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {setLanguage} from '../../store/ducks/language';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
 import BoxWord from '../../components/BoxWord';
+import languages from '../../constants/languages';
 
 import styles from './styles';
 
 const Home = ({navigation}) => {
-  // const themesColors = useSelector(state => state.themes);
-
-  const placeholder = (
-    <Text style={styles.textSearchBox}>Search vocabulaire</Text>
-  );
+  const dispatch = useDispatch();
 
   const mock1 = [{"word":"word","phonetics":[{"text":"/wərd/","audio":"https://lex-audio.useremarkable.com/mp3/word_us_1.mp3"}],"meanings":[{"partOfSpeech":"transitive verb","definitions":[{"definition":"Choose and use particular words in order to say or write (something)","synonyms":["phrase","express","put","couch","frame","set forth","formulate","style"],"example":"he words his request in a particularly ironic way"}]},{"partOfSpeech":"noun","definitions":[{"definition":"A single distinct meaningful element of speech or writing, used with others (or sometimes alone) to form a sentence and typically shown with a space on either side when written or printed.","synonyms":["term","name","expression","designation","locution"],"example":"I don't like the word “unofficial”"},{"definition":"A command, password, or signal.","synonyms":["instruction","order","command"]},{"definition":"One's account of the truth, especially when it differs from that of another person."},{"definition":"The text or spoken part of a play, opera, or other performed piece; a script.","synonyms":["script","text"]},{"definition":"A basic unit of data in a computer, typically 16 or 32 bits long."}]},{"partOfSpeech":"exclamation","definitions":[{"definition":"Used to express agreement."}]}]}];
   const mock2 = [{"word":"love","phonetics":[{"text":"/ləv/","audio":"https://lex-audio.useremarkable.com/mp3/love_us_1.mp3"}],"meanings":[{"partOfSpeech":"transitive verb","definitions":[{"definition":"Feel deep affection for (someone)","synonyms":["be in love with","be infatuated with","be smitten with","be besotted with","be passionate about"],"example":"he loved his sister dearly"},{"definition":"Like or enjoy very much.","synonyms":["like very much","delight in","enjoy greatly","have a passion for","take great pleasure in","derive great pleasure from","have a great liking for","be addicted to","relish","savour"],"example":"I just love dancing"}]},{"partOfSpeech":"noun","definitions":[{"definition":"An intense feeling of deep affection.","synonyms":["deep affection","fondness","tenderness","warmth","intimacy","attachment","endearment"],"example":"babies fill parents with feelings of love"},{"definition":"A great interest and pleasure in something.","synonyms":["liking","weakness","partiality","bent","leaning","proclivity","inclination","disposition"],"example":"his love for football"},{"definition":"A person or thing that one loves.","synonyms":["beloved","loved one","love of one's life","dear","dearest","dear one","darling","sweetheart","sweet","sweet one","angel","honey"],"example":"she was the love of his life"},{"definition":"(in tennis, squash, and some other sports) a score of zero; nil.","example":"love fifteen"}]}]}];
@@ -24,7 +29,54 @@ const Home = ({navigation}) => {
         <Text style={styles.titleApp}>Parole</Text>
         <Text style={styles.titleAppPhonetic}>/pa'Rɔl/</Text>
         <View style={styles.boxFlags}>
-          <Text>FLAGS</Text>
+          <View style={styles.rowFlags}>
+            <TouchableOpacity
+              onPress={() => dispatch(setLanguage(languages.BR_PORTUGUESE))}>
+              <Image
+                source={require('../../../img/brazil-flag.png')}
+                style={styles.flag}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                dispatch(setLanguage(languages.FRENCH));
+              }}>
+              <Image
+                source={require('../../../img/france-flag.png')}
+                style={styles.flag}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => dispatch(setLanguage(languages.SPANISH))}>
+              <Image
+                source={require('../../../img/spain-flag.png')}
+                style={styles.flag}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.rowFlags}>
+            <TouchableOpacity
+              onPress={() => dispatch(setLanguage(languages.RUSSIAN))}>
+              <Image
+                source={require('../../../img/russia-flag.png')}
+                style={styles.flag}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => dispatch(setLanguage(languages.ITALIAN))}>
+              <Image
+                source={require('../../../img/italy-flag.png')}
+                style={styles.flag}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => dispatch(setLanguage(languages.USA))}>
+              <Image
+                source={require('../../../img/usa-flag.png')}
+                style={styles.flag}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.searchBox}>
           <View style={styles.containerIconInput}>

@@ -72,11 +72,26 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   boxFlags: {
-    height: 100,
-    width: 300,
+    width: widthScreen / 1.5,
+    height: heightScreen / 7,
     marginBottom: 25,
-    marginTop: 20,
-    backgroundColor: '#FFF',
+    marginTop: 25,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  rowFlags: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  flag: {
+    height: 50,
+    width: 50,
+    zIndex: 1,
+    borderWidth: 3,
+    borderColor: 'white',
+    borderRadius: 100,
   },
 });
 
