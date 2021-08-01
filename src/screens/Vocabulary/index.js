@@ -1,9 +1,17 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const Vocabulary = props => {
-  console.log(props.route.params.vocabulary);
-  return <View></View>;
+  const navigation = useNavigation;
+  const vocab = props.route.params.vocabulary;
+
+  return (
+    <View>
+      <Text>{vocab.word}</Text>
+      <Text>{vocab.origin}</Text>
+    </View>
+  );
 };
 
 export default Vocabulary;
