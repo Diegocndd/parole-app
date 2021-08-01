@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import {setLanguage} from '../../store/ducks/language';
-import { getWordInfos } from '../../api';
+import {getWordInfos} from '../../api';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BoxWord from '../../components/BoxWord';
