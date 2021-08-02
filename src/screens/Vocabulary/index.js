@@ -1,13 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ScrollView,
-} from 'react-native';
+import {View, Text, TouchableOpacity, FlatList, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {getWordInfos} from '../../api';
+
 const Sound = require('react-native-sound');
 
 import styles from './styles';
@@ -97,6 +93,14 @@ const Vocabulary = props => {
     );
   };
 
+  const goToSynonym = async synonym => {
+    getWordInfos(synonym)
+      .then(data =>
+        navigation.navigate('Vocabulary', {vocabulary: data.data[0]}),
+      )
+      .catch(error => console.log(error));
+  };
+
   const renderSynonyms = e => {
     return (
       <>
@@ -104,9 +108,11 @@ const Vocabulary = props => {
           if (qtdSynonyms < 11 && def.synonyms && def.synonyms[0]) {
             qtdSynonyms += 1;
             return (
-              <Text style={{color: '#FF4444'}}>
-                {'\u203a'} {capitalizeFirstLetter(def.synonyms[0])}
-              </Text>
+              <TouchableOpacity onPress={() => goToSynonym(def.synonyms[0])}>
+                <Text style={{color: '#FF4444'}}>
+                  {'\u203a'} {capitalizeFirstLetter(def.synonyms[0])}
+                </Text>
+              </TouchableOpacity>
             );
           }
         })}
@@ -119,7 +125,7 @@ const Vocabulary = props => {
   };
 
   const playAudio = () => {
-    if (vocab.phonetics[0].audio) {
+    if (typeof vocab.phonetics[0]?.audio !== 'undefined') {
       urlSound = vocab.phonetics[0].audio;
       phonetics = vocab.phonetics[0].text;
       soundPhonetics = new Sound(urlSound, null, e => {
@@ -147,8 +153,18 @@ const Vocabulary = props => {
             <TouchableOpacity>
               <Icon name="share-social" size={50} color="#FFF" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => playAudio()}>
-              <Icon name="play-circle" size={50} color="#FFF" />
+            <TouchableOpacity
+              onPress={() => playAudio()}
+              disabled={typeof vocab.phonetics[0]?.audio === 'undefined'}>
+              <Icon
+                name="play-circle"
+                size={50}
+                color="#FFF"
+                style={{
+                  opacity:
+                    typeof vocab.phonetics[0]?.audio !== 'undefined' ? 1 : 0.5,
+                }}
+              />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => saveWord()}>
               {savedWord ? (
