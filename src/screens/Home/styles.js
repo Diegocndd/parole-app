@@ -93,6 +93,23 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 100,
   },
+  bookmark: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+  },
+  loadingScreen: {
+    backgroundColor: '#FF4444',
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textSearching: {
+    fontSize: 20,
+    color: '#fff',
+    marginTop: 30,
+  },
 });
 
 export default styles;
