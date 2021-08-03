@@ -62,6 +62,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  buttonClearBookmark: {
+    marginBottom: 20,
+    backgroundColor: '#FF4444',
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 15,
+  },
+  textButtonClear: {
+    color: '#fff',
+    fontSize: 18,
+  },
 });
 
 export default styles;

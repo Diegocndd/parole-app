@@ -1,5 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  Text,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import BoxWord from '../../components/BoxWord';
 import GoBack from '../../components/GoBack';
@@ -18,10 +24,18 @@ const Bookmarks = ({navigation}) => {
     })();
   });
 
+  const clearAsyncStorage = async () => {
+    AsyncStorage.clear();
+  };
+
   const renderItem = item => {
     return (
       <>
-        <TouchableOpacity style={styles.bookmarkContainer}>
+        <TouchableOpacity
+          style={styles.bookmarkContainer}
+          onPress={() =>
+            navigation.navigate('Vocabulary', {vocabulary: item.item})
+          }>
           <BoxWord vocabulary={item.item} />
         </TouchableOpacity>
       </>
@@ -39,15 +53,24 @@ const Bookmarks = ({navigation}) => {
 
       <View style={styles.bookmarkListContainer}>
         {vocabularies ? (
-          <FlatList
-            data={vocabularies}
-            showsVerticalScrollIndicator={false}
-            renderItem={item => renderItem(item)}
-            keyExtractor={(item, index) => index.toString()}
-          />
+          <>
+            <FlatList
+              data={vocabularies}
+              showsVerticalScrollIndicator={false}
+              renderItem={item => renderItem(item)}
+              keyExtractor={(item, index) => index.toString()}
+            />
+            {vocabularies.length > 0 ? (
+              <TouchableWithoutFeedback onPress={() => clearAsyncStorage()}>
+                <View style={styles.buttonClearBookmark}>
+                  <Text style={styles.textButtonClear}>Clear Bookmark</Text>
+                </View>
+              </TouchableWithoutFeedback>
+            ) : null}
+          </>
         ) : null}
 
-        {vocabularies?.length === 0 ? (
+        {vocabularies?.length === 0 || !vocabularies ? (
           <View style={styles.containerMessage}>
             <View>
               <Text style={styles.messageNoBookmark}>

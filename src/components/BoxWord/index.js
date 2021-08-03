@@ -15,7 +15,7 @@ const BoxWord = props => {
 
   return (
     <>
-      <TouchableOpacity style={styles.boxWordContainer}>
+      <View style={styles.boxWordContainer}>
         <View style={styles.stickWordContainer} />
         <View style={styles.boxWordDefinition}>
           <Text style={styles.titleWord}>{word?.toUpperCase()}</Text>
@@ -23,7 +23,7 @@ const BoxWord = props => {
             {definition?.substring(0, 60) + '...'}
           </Text>
         </View>
-      </TouchableOpacity>
+      </View>
     </>
   );
 };
