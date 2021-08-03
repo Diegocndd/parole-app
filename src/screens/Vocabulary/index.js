@@ -3,7 +3,6 @@ import {View, Text, TouchableOpacity, FlatList, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-community/async-storage';
-import {useSelector} from 'react-redux';
 import GoBack from '../../components/GoBack';
 
 import {getWordInfos} from '../../api';
@@ -24,7 +23,6 @@ const Vocabulary = props => {
   const vocab = props.route.params.vocabulary;
   const definitions = vocab.meanings;
   const word = vocab.word;
-  const {language} = useSelector(store => store.language);
 
   const [savedWord, setSavedWord] = useState(false);
 
@@ -37,6 +35,32 @@ const Vocabulary = props => {
     return -1;
   }
 
+  const updateLatestResearch = async () => {
+    let latestResearch = await AsyncStorage.getItem(keys.latestResearch);
+    latestResearch = JSON.parse(latestResearch);
+
+    if (
+      latestResearch.length < 3 &&
+      containsObject(vocab, latestResearch) === -1
+    ) {
+      latestResearch.push(vocab);
+      await AsyncStorage.setItem(
+        keys.latestResearch,
+        JSON.stringify(latestResearch),
+      );
+    } else if (
+      latestResearch.length >= 3 &&
+      containsObject(vocab, latestResearch) === -1
+    ) {
+      latestResearch.pop();
+      latestResearch.unshift(vocab);
+      await AsyncStorage.setItem(
+        keys.latestResearch,
+        JSON.stringify(latestResearch),
+      );
+    }
+  };
+
   useEffect(() => {
     (async () => {
       let bookmarks = await AsyncStorage.getItem(keys.bookmarks);
@@ -47,6 +71,7 @@ const Vocabulary = props => {
       }
     })();
 
+    updateLatestResearch();
     qtdExamples = 0;
     qtdSynonyms = 0;
   });
