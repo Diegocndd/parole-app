@@ -25,7 +25,7 @@ const Bookmarks = ({navigation}) => {
   });
 
   const clearAsyncStorage = async () => {
-    AsyncStorage.clear();
+    await AsyncStorage.setItem(keys.bookmarks, JSON.stringify([]));
   };
 
   const renderItem = item => {
