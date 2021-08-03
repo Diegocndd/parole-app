@@ -43,7 +43,7 @@ const Vocabulary = props => {
       latestResearch.length < 3 &&
       containsObject(vocab, latestResearch) === -1
     ) {
-      latestResearch.push(vocab);
+      latestResearch.unshift(vocab);
       await AsyncStorage.setItem(
         keys.latestResearch,
         JSON.stringify(latestResearch),
