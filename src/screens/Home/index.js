@@ -17,7 +17,6 @@ import opacityFlag from '../../constants/opacityFlag';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BoxWord from '../../components/BoxWord';
 import languages from '../../constants/languages';
-
 import styles from './styles';
 
 const Home = ({navigation}) => {
@@ -57,7 +56,9 @@ const Home = ({navigation}) => {
       ) : (
         <>
           <View style={styles.headerHome}>
-            <TouchableOpacity style={styles.bookmark}>
+            <TouchableOpacity
+              style={styles.bookmark}
+              onPress={() => navigation.navigate('Bookmarks')}>
               <Icon name="bookmark" size={45} color="#FFF" />
             </TouchableOpacity>
             <Text style={styles.titleApp}>Parole</Text>

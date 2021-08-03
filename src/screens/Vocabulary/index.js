@@ -2,8 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, FlatList, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {getWordInfos} from '../../api';
+import AsyncStorage from '@react-native-community/async-storage';
+import {useSelector} from 'react-redux';
+import GoBack from '../../components/GoBack';
 
+import {getWordInfos} from '../../api';
+import keys from '../../constants/storage';
+
+const _ = require('lodash');
 const Sound = require('react-native-sound');
 
 import styles from './styles';
@@ -11,17 +17,36 @@ import styles from './styles';
 let qtdExamples = 0;
 let qtdSynonyms = 0;
 let urlSound;
-let phonetics;
 let soundPhonetics;
 
 const Vocabulary = props => {
   const navigation = useNavigation();
   const vocab = props.route.params.vocabulary;
   const definitions = vocab.meanings;
+  const word = vocab.word;
+  const {language} = useSelector(store => store.language);
 
   const [savedWord, setSavedWord] = useState(false);
 
+  function containsObject(obj, arr) {
+    for (var i = 0; i < arr.length; i++) {
+      if (_.isEqual(arr[i], obj)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   useEffect(() => {
+    (async () => {
+      let bookmarks = await AsyncStorage.getItem(keys.bookmarks);
+      let index = containsObject(vocab, JSON.parse(bookmarks));
+
+      if (index !== -1) {
+        setSavedWord(true);
+      }
+    })();
+
     qtdExamples = 0;
     qtdSynonyms = 0;
   });
@@ -120,14 +145,54 @@ const Vocabulary = props => {
     );
   };
 
-  const saveWord = () => {
-    setSavedWord(!savedWord);
+  const removeWordFromBookmark = async () => {
+    try {
+      let bookmarks = await AsyncStorage.getItem(keys.bookmarks);
+      bookmarks = JSON.parse(bookmarks);
+      const index = containsObject(vocab, bookmarks);
+      if (index !== -1) {
+        bookmarks.splice(index, 1);
+      }
+      setSavedWord(false);
+      await AsyncStorage.setItem(keys.bookmarks, JSON.stringify(bookmarks));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const saveWord = async () => {
+    if (!savedWord) {
+      try {
+        const bookmarks = await AsyncStorage.getItem(keys.bookmarks);
+        if (bookmarks === null) {
+          // First time
+          const initialStorage = [vocab];
+          await AsyncStorage.setItem(
+            keys.bookmarks,
+            JSON.stringify(initialStorage),
+          );
+        } else {
+          const allBookmarks = JSON.parse(bookmarks);
+          if (allBookmarks.indexOf(vocab) === -1) {
+            allBookmarks.push(vocab);
+            await AsyncStorage.setItem(
+              keys.bookmarks,
+              JSON.stringify(allBookmarks),
+            );
+          }
+        }
+        setSavedWord(true);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      removeWordFromBookmark();
+    }
   };
 
   const playAudio = () => {
     if (typeof vocab.phonetics[0]?.audio !== 'undefined') {
       urlSound = vocab.phonetics[0].audio;
-      phonetics = vocab.phonetics[0].text;
       soundPhonetics = new Sound(urlSound, null, e => {
         if (e) {
           console.log("Can't play audio!");
@@ -141,14 +206,9 @@ const Vocabulary = props => {
   return (
     <View style={{flex: 1}}>
       <View style={styles.wordContainer}>
-        <TouchableOpacity
-          style={styles.backScreenContainer}
-          onPress={() => navigation.goBack()}>
-          <Icon name="chevron-back-outline" size={37} color="#FFF" />
-          <Text style={styles.searchButton}>Search</Text>
-        </TouchableOpacity>
+        <GoBack titleScreen={'Search'} />
         <View style={styles.wordScreenContainer}>
-          <Text style={styles.titleWord}>{vocab.word}</Text>
+          <Text style={styles.titleWord}>{word}</Text>
           <View style={styles.iconsMenu}>
             <TouchableOpacity>
               <Icon name="share-social" size={50} color="#FFF" />

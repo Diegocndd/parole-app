@@ -6,18 +6,22 @@ import {useNavigation} from '@react-navigation/native';
 const BoxWord = props => {
   const navigation = useNavigation();
 
-  const {word} = props.vocabulary[0];
-  const {definition} = props.vocabulary[0].meanings[0].definitions[0];
+  const {word} = props.vocabulary;
+  let definition = '';
+
+  if (props.vocabulary.meanings) {
+    definition = props.vocabulary.meanings[0].definitions[0].definition;
+  }
 
   return (
     <>
-      <TouchableOpacity
-        style={styles.boxWordContainer}
-        onPress={() => navigation.navigate('Vocabulary', {vocabulary: props})}>
+      <TouchableOpacity style={styles.boxWordContainer}>
         <View style={styles.stickWordContainer} />
         <View style={styles.boxWordDefinition}>
-          <Text style={styles.titleWord}>{word.toUpperCase()}</Text>
-          <Text style={styles.definitionWord}>{definition}</Text>
+          <Text style={styles.titleWord}>{word?.toUpperCase()}</Text>
+          <Text style={styles.definitionWord}>
+            {definition?.substring(0, 60) + '...'}
+          </Text>
         </View>
       </TouchableOpacity>
     </>
