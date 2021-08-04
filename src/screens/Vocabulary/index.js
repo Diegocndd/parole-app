@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, FlatList, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+  Share,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -228,6 +235,26 @@ const Vocabulary = props => {
     }
   };
 
+  const shareVocabulary = async () => {
+    let message = capitalizeFirstLetter(word) + ': ';
+
+    vocab.meanings.map(meaning => {
+      meaning.definitions.map(definition => {
+        message += definition.definition + ' ';
+      });
+    });
+
+    message += '\n[Definitions from Parole app]';
+
+    try {
+      await Share.share({
+        message: message,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <View style={{flex: 1}}>
       <View style={styles.wordContainer}>
@@ -235,7 +262,7 @@ const Vocabulary = props => {
         <View style={styles.wordScreenContainer}>
           <Text style={styles.titleWord}>{word}</Text>
           <View style={styles.iconsMenu}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => shareVocabulary()}>
               <Icon name="share-social" size={50} color="#FFF" />
             </TouchableOpacity>
             <TouchableOpacity
